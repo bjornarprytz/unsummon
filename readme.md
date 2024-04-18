@@ -44,7 +44,7 @@ You have, for whatever reason, summoned a demon from hell. When you realize your
 - How does the player end a word?
   - Press space, yields the turn
 - How does the player discover the rules of harmony?
-  - By uttering words
+  - By uttering spells
 - How does the demon play?
   - Turn the page
   - Move glyphs around
@@ -52,25 +52,38 @@ You have, for whatever reason, summoned a demon from hell. When you realize your
 - What effect does uttering a spell have?
   - Add Binding Power (score)
   - Trick the demon into beneficial bargains
+- Could glyphs carry extra meaning?
+  - Alchemical Elements
+    - Imbue spells with effects beyond the binding power
 
 ## TODO
+
+- Game Loop
+  - Player moves around the glyphs on the page to form words
+  - Once they hit space, the word is committed to memory, and its  glyphs are removed from the page. New glyphs will appear, like candy crush
 
 - Glyph (letter)
   - Could have effects applied
     - shaking, colors, particles, etc.
+  - Elemental number (For alchemical purposes)
   - Could change orientation
   - Mono space
 - Grid of Glyphs
   - Glyphs can change position
   - Change the page
+- Rules of Harmony
+  - Fibonacci
+  - Cardinal
+  - Primal
 - Player
   - Spells (at least 3 words)
   - Words (at least 3 glyphs)
+  - Known Rules of Harmony
 - Controls
   - Type to move around the page, traversing glyphs
   - Space: Commit to memory the current word
   - Enter: Utter the current spell
-  - Backspace: Erase one glyph
+  - Backspace: Undo one glyph
 
 - Push release with `./push_release.sh`
 

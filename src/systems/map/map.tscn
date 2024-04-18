@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://2si071os3px6"]
+
+[ext_resource type="Script" path="res://systems/map/map.gd" id="1_2eg78"]
+
+[node name="Map" type="Node2D"]
+script = ExtResource("1_2eg78")
+
+[node name="Glyphs" type="Node2D" parent="."]

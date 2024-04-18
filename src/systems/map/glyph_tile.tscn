@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://dfx3nq6h7bxuv"]
+
+[ext_resource type="Script" path="res://systems/map/glyphTile.gd" id="1_87gos"]
+[ext_resource type="FontFile" uid="uid://420vpyjj0y3n" path="res://assets/font/necrofonticon.ttf" id="2_kwafu"]
+
+[sub_resource type="Theme" id="Theme_vntgd"]
+default_font = ExtResource("2_kwafu")
+default_font_size = 512
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ehl45"]
+draw_center = false
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_h0c32"]
+default_font_size = 512
+
+[node name="GlyphTile" type="Node2D"]
+script = ExtResource("1_87gos")
+
+[node name="Glyph" type="RichTextLabel" parent="."]
+offset_right = 437.0
+offset_bottom = 534.0
+scale = Vector2(0.2, 0.2)
+theme = SubResource("Theme_vntgd")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ehl45")
+bbcode_enabled = true
+text = "[center]s"
+fit_content = true
+scroll_active = false
+
+[node name="Explanation" type="RichTextLabel" parent="."]
+modulate = Color(1, 1, 1, 0.25098)
+offset_left = 67.0
+offset_top = 71.0
+offset_right = 867.0
+offset_bottom = 769.0
+scale = Vector2(0.05, 0.05)
+theme = SubResource("Theme_h0c32")
+text = "a"
+fit_content = true
+scroll_active = false
