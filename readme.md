@@ -72,14 +72,6 @@ You have, for whatever reason, summoned a demon from hell. When you realize your
   - Enter: Utter the current spell
   - Backspace: Erase one glyph
 
-- Setup itch.io page for unsummon [link](https://itch.io/game/new)
-  - Set Kind to HTML
-  - Set viewport dimensions (normal: 1280x720)
-  - Check SharedArrayBuffer
-  - Hit the Save button
-- Get Butler API key from [itch.io](https://itch.io/user/settings/api-keys)
-- Publish github repo
-- Add key to GitHub secrets as BUTLER_API_KEY [link](https://github.com/bjornarprytz/unsummon/settings/secrets/actions)
 - Push release with `./push_release.sh`
 
 ### Extra
