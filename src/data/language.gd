@@ -1,9 +1,16 @@
 class_name Language
 extends Resource
 
+static var _alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 static var _vowels = ['a', 'e', 'i', 'o', 'u']
 static var _primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
 static var _fibbonacci = [1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+static func random_letter() -> String:
+	return _alphabet.pick_random()
+	
+static func is_letter(letter: String):
+	return _alphabet.has(letter)
 
 static func is_vowel(letter: String):
 	assert(letter.length() == 1, "Letter must be a single character")
@@ -105,6 +112,9 @@ class Glyph:
 		assert(character.length() == 1, "Glyph must be a single character")
 		_character = character
 	
+	func get_char() -> String:
+		return _character
+
 	func is_vowel():
 		return Language.is_vowel(_character)
 	
@@ -122,6 +132,9 @@ class Word:
 
 	func append(letters: Array[Glyph]=[]):
 		_w.append_array(letters)
+
+	func pop_glyph() -> Glyph:
+		return _w.pop_back()
 
 	func length():
 		return _w.size()

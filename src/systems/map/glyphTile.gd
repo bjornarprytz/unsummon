@@ -12,18 +12,35 @@ var character: String:
 		character = value
 		_update_glyph()
 
-var glyph: RichTextLabel:
+var coordinates: Vector2i = Vector2i.ZERO
+var map: Map
+
+func get_relative_glyph(vec: Vector2i) -> GlyphTile:
+	return map.get_glyph(coordinates + vec)
+
+func get_neighbours() -> Array:
+	var neighbours = []
+	for vec in [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]:
+		var neighbour = get_relative_glyph(vec)
+		if neighbour != null:
+			neighbours.append(neighbour)
+	return neighbours
+
+func get_glyph() -> Language.Glyph:
+	return Language.Glyph.new(character)
+
+var _glyph: RichTextLabel:
 	get:
 		return $Glyph
 	
-var explanation: RichTextLabel:
+var _explanation: RichTextLabel:
 	get:
 		return $Explanation
 
 var size: Vector2:
 	get:
-		return glyph.get_rect().size
+		return _glyph.get_rect().size
 
 func _update_glyph():
-	glyph.text = "[center]%s" % character
-	explanation.text = character
+	_glyph.text = "[center]%s" % character
+	_explanation.text = character
