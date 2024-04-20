@@ -43,4 +43,4 @@ var size: Vector2:
 
 func _update_glyph():
 	_glyph.text = "[center]%s" % character
-	_explanation.text = character
+	_explanation.text = "%d" % Language.Glyph.new(character).cardinal()

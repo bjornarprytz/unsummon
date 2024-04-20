@@ -70,7 +70,7 @@ You have, for whatever reason, summoned a demon from hell. When you realize your
   - Mono space
 - Grid of Glyphs
   - Glyphs can change position
-  - Change the page
+  - Remove glyphs
 - Rules of Harmony
   - Fibonacci
   - Cardinal

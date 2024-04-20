@@ -1,7 +1,7 @@
 class_name Language
 extends Resource
 
-static var _alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+static var _alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] # , "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 static var _vowels = ['a', 'e', 'i', 'o', 'u']
 static var _primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
 static var _fibbonacci = [1, 1, 2, 3, 5, 8, 13, 21, 34]
@@ -103,14 +103,23 @@ static func primal_harmony(sequence: Array[int]) -> int:
 	return primalHarmony
 
 static func harmony(sequence: Array[int]) -> int:
-	return cardinal_harmony(sequence) * primal_harmony(sequence) * fibonacci_harmony(sequence)
+	var c = cardinal_harmony(sequence)
+	var p = primal_harmony(sequence)
+	var f = fibonacci_harmony(sequence)
+
+	print("Cardinal Harmony: ", c)
+	print("Primal Harmony: ", p)
+	print("Fibonacci Harmony: ", f)
+	return c * p * f
 
 class Glyph:
 	var _character: String
+	var _baseUnicode: int
 
 	func _init(character: String):
 		assert(character.length() == 1, "Glyph must be a single character")
-		_character = character
+		_character = character.to_lower()
+		_baseUnicode = Language._alphabet[0].unicode_at(0)
 	
 	func get_char() -> String:
 		return _character
@@ -122,7 +131,7 @@ class Glyph:
 		return Language.is_consonant(_character)
 	
 	func cardinal() -> int:
-		return int(_character)
+		return (_character.unicode_at(0) - _baseUnicode)
 
 class Word:
 	var _w: Array[Glyph] = []
@@ -226,3 +235,9 @@ class Spell:
 			score *= anagrams.size()
 
 		return score
+	
+	func is_valid() -> bool:
+		if _words.size() < 2:
+			return false
+		
+		return true
