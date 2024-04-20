@@ -1,6 +1,8 @@
 class_name Map
 extends Node2D
 
+signal glyphHovered(glyph: GlyphTile)
+
 var height := 5
 var width := 9
 
@@ -13,7 +15,6 @@ func _ready() -> void:
 		_glyph_lookup.append([])
 		for x in range(width):
 			var glyph = _create_glyph(x, y)
-
 			_glyph_lookup[y].append(glyph)
 
 func remove_glyph(coords: Vector2i) -> void:
@@ -85,6 +86,7 @@ func _create_glyph(x: int, y: int) -> GlyphTile:
 	glyph.position = glyph.size * Vector2(x, y)
 	glyph.coordinates = Vector2(x, y)
 	glyph.map = self
+	glyph.hovered.connect(_on_GlyphTile_hovered)
 	glyphs.add_child(glyph)
 	_move_glyph(glyph, Vector2i(x, y))
 	if _glyph_lookup[y].size() > x:
@@ -93,3 +95,7 @@ func _create_glyph(x: int, y: int) -> GlyphTile:
 		_glyph_lookup[y].append(glyph)
 
 	return glyph
+
+func _on_GlyphTile_hovered(glyph: GlyphTile, hovered: bool) -> void:
+	if hovered:
+		glyphHovered.emit(glyph)

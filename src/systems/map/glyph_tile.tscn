@@ -39,8 +39,12 @@ offset_top = 78.0
 offset_right = 1124.0
 offset_bottom = 776.0
 scale = Vector2(0.05, 0.05)
+mouse_filter = 2
 theme = SubResource("Theme_h0c32")
 bbcode_enabled = true
 text = "a"
 fit_content = true
 scroll_active = false
+
+[connection signal="mouse_entered" from="Glyph" to="." method="_on_glyph_mouse_entered"]
+[connection signal="mouse_exited" from="Glyph" to="." method="_on_glyph_mouse_exited"]

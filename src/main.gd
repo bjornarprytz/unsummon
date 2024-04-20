@@ -7,6 +7,9 @@ var moves: Array[GlyphTile] = []
 
 var player: Player = Player.new()
 
+var isReadingWord: bool = false
+var currentHoveredGlyph: GlyphTile = null
+
 func _commit_word():
 	if moves.size() == 1:
 		push_warning("Cannot commit a single glyph")
@@ -18,11 +21,6 @@ func _commit_word():
 	
 	map.tumble_glyphs()
 
-	var initialGlyph = map.get_glyph(cursorCoords)
-	moves.push_back(initialGlyph)
-	player.add_glyph(initialGlyph.get_glyph())
-	initialGlyph.modulate = Color(1, 0, 0)
-
 func _utter_spell():
 	player.utter_spell()
 
@@ -31,49 +29,59 @@ func _undo():
 		push_warning("Cannot undo any further")
 		return
 
-	print(player.remove_glyph())
+	player.remove_glyph()
 	var cursor = moves[moves.size() - 1]
-	cursor.modulate = Color(1, 1, 1, 1)
+	cursor.set_marked(false)
 	moves.pop_back()
 
-func _read(direction: Vector2i):
-	print("Reading in direction: ", direction)
-	var cursor = moves[moves.size() - 1]
-	var next = cursor.get_relative_glyph(direction)
+func _cancel_reading():
+	for glyph in moves:
+		glyph.set_marked(false)
+	moves.clear()
+	isReadingWord = false
 
-	if next in moves:
-		push_warning("Cannot move to the same glyph twice")
+func _tryReadGlyph(glyph: GlyphTile):
+	if glyph in moves:
+		var index = moves.find(glyph)
+		while moves.size() > index + 1:
+			_undo()
 		return
 	
-	if next != null:
-		moves.push_back(next)
-		print(player.add_glyph(next.get_glyph()))
-		next.modulate = Color(1, 0, 0)
-	else:
-		push_warning("No glyph in that direction")
+	moves.push_back(glyph)
+	print(player.add_glyph(glyph.get_glyph()))
+	glyph.set_marked(true)
 
 func _ready() -> void:
-	var cursor = map.get_middle_glyph()
-	moves.push_back(cursor)
-	player.add_glyph(cursor.get_glyph())
-	cursor.modulate = Color(1, 0, 0)
+	map.glyphHovered.connect(_onGlyphHovered)
 
-	pass
+func _onGlyphHovered(glyph: GlyphTile) -> void:
+	
+	if (isReadingWord):
+		_tryReadGlyph(glyph)
 
-func _unhandled_key_input(event: InputEvent) -> void:
+	currentHoveredGlyph = glyph
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and currentHoveredGlyph != null:
+			if event.is_pressed():
+				if event.is_echo():
+					return
+				isReadingWord = true
+				assert(moves.size() == 0)
+				if currentHoveredGlyph != null:
+					moves.push_back(currentHoveredGlyph)
+					currentHoveredGlyph.set_marked(true)
+			elif isReadingWord:
+				_commit_word()
+				currentHoveredGlyph = null
+				isReadingWord = false
+		elif isReadingWord and event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
+			_cancel_reading()
+	
 	if event is InputEventKey and event.pressed:
 		match event.keycode:
 			KEY_SPACE:
 				_commit_word()
 			KEY_ENTER:
 				_utter_spell()
-			KEY_BACKSPACE:
-				_undo()
-			KEY_UP, KEY_W:
-				_read(Vector2i.UP)
-			KEY_DOWN, KEY_S:
-				_read(Vector2i.DOWN)
-			KEY_LEFT, KEY_A:
-				_read(Vector2i.LEFT)
-			KEY_RIGHT, KEY_D:
-				_read(Vector2i.RIGHT)
