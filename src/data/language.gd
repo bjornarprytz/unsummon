@@ -107,19 +107,18 @@ static func harmony(sequence: Array[int]) -> int:
 	var p = primal_harmony(sequence)
 	var f = fibonacci_harmony(sequence)
 
-	print("Cardinal Harmony: ", c)
-	print("Primal Harmony: ", p)
-	print("Fibonacci Harmony: ", f)
 	return c * p * f
 
 class Glyph:
 	var _character: String
 	var _baseUnicode: int
+	var _cardinal: int
 
 	func _init(character: String):
 		assert(character.length() == 1, "Glyph must be a single character")
 		_character = character.to_lower()
 		_baseUnicode = Language._alphabet[0].unicode_at(0)
+		_cardinal = _character.unicode_at(0) - _baseUnicode
 	
 	func get_char() -> String:
 		return _character
@@ -131,19 +130,28 @@ class Glyph:
 		return Language.is_consonant(_character)
 	
 	func cardinal() -> int:
-		return (_character.unicode_at(0) - _baseUnicode)
+		return _cardinal
 
 class Word:
 	var _w: Array[Glyph] = []
+	var fibHarmony: int = 0
+	var cardHarmony: int = 0
+	var primHarmony: int = 0
 
 	func _init(word: Array[Glyph]=[]):
 		_w = word
+		_compute_harmony()
 
 	func append(letters: Array[Glyph]=[]):
 		_w.append_array(letters)
+		print("Appending: ", letters)
+		_compute_harmony()
 
 	func pop_glyph() -> Glyph:
-		return _w.pop_back()
+		var glyph = _w.pop_back()
+		print("Popping: ", glyph)
+		_compute_harmony()
+		return glyph
 
 	func length():
 		return _w.size()
@@ -154,17 +162,13 @@ class Word:
 			raw += c._character
 		return raw
 
-	func compute_harmony() -> int:
-		var cardinalValues: Array[int] = []
-		for c in _w:
-			cardinalValues.append(c.cardinal())
-
-		var harmony = Language.harmony(cardinalValues)
+	func harmony() -> int:
+		var harmonyValue = cardHarmony + fibHarmony + primHarmony
 
 		if is_palindrome():
-			harmony *= 2
+			harmonyValue *= 2
 		
-		return harmony
+		return harmonyValue
 
 	func is_valid() -> bool:
 		if _w.size() < 3:
@@ -203,6 +207,14 @@ class Word:
 			if !b_chars.has(key) or b_chars[key] != a_chars[key]:
 				return false
 		return true
+	
+	func _compute_harmony():
+		var cardinalValues: Array[int] = []
+		for c in _w:
+			cardinalValues.append(c.cardinal())
+		fibHarmony = Language.fibonacci_harmony(cardinalValues)
+		cardHarmony = Language.cardinal_harmony(cardinalValues)
+		primHarmony = Language.primal_harmony(cardinalValues)
 
 class Spell:
 	var _words: Array[Word] = []
@@ -216,7 +228,7 @@ class Spell:
 	func compute_harmony():
 		var score = 0
 		for word in _words:
-			score += word.compute_harmony()
+			score += word.harmony()
 		
 		var ordinalValues: Array[int] = []
 

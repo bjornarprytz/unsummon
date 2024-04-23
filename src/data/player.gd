@@ -15,24 +15,46 @@ var bindingPower: int = 0:
 
 func add_glyph(glyph: Language.Glyph) -> int:
 	currentWord.append([glyph])
+	print("Added glyph: ", glyph._character)
 
-	return currentWord.compute_harmony()
+	emit_changed()
+	return currentWord.harmony()
 
 func remove_glyph():
 	currentWord.pop_glyph()
 
-	return currentWord.compute_harmony()
+	print("Removed glyph")
 
+	emit_changed()
+	return currentWord.harmony()
 
-func commit_word():
+func clear_word():
+	currentWord = Language.Word.new()
+
+	print("Cleared word")
+
+	emit_changed()
+
+func commit_word() -> bool:
 	if currentWord.is_valid():
+		var power = currentWord.harmony()
 		currentSpell.add_word(currentWord)
 		currentWord = Language.Word.new()
 
-func utter_spell():
+		bindingPower += power
+	
+		emit_changed()
+		return true
+	return false
+
+func utter_spell() -> bool:
 	if currentSpell.is_valid():
 		
 		bindingPower += currentSpell.compute_harmony()
 
 		spells.append(currentSpell)
 		currentSpell = Language.Spell.new()
+	
+		emit_changed()
+		return true
+	return false

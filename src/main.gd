@@ -2,6 +2,7 @@ class_name GameState
 extends Node2D
 
 @onready var map: Map = $Map
+@onready var ui: UI = $UI
 
 var moves: Array[GlyphTile] = []
 
@@ -11,12 +12,21 @@ var isReadingWord: bool = false
 var currentHoveredGlyph: GlyphTile = null
 
 func _commit_word():
+	print("Committing word")
 	if moves.size() == 1:
 		push_warning("Cannot commit a single glyph")
-	player.commit_word()
-	var cursorCoords = moves[moves.size() - 1].coordinates
-	for glyph in moves:
-		map.remove_glyph(glyph.coordinates)
+		return
+	
+	if player.commit_word(): # Check if word is valid
+		print("Word is valid")
+		for glyph in moves:
+			map.remove_glyph(glyph.coordinates)
+	else:
+		print("Word is invalid")
+		player.clear_word()
+		for glyph in moves:
+			glyph.set_marked(false)
+			
 	moves.clear()
 	
 	map.tumble_glyphs()
@@ -40,19 +50,23 @@ func _cancel_reading():
 	moves.clear()
 	isReadingWord = false
 
-func _tryReadGlyph(glyph: GlyphTile):
-	if glyph in moves:
-		var index = moves.find(glyph)
+func _tryReadGlyph(tile: GlyphTile):
+	if tile in moves:
+		var index = moves.find(tile)
 		while moves.size() > index + 1:
 			_undo()
 		return
 	
-	moves.push_back(glyph)
-	print(player.add_glyph(glyph.get_glyph()))
-	glyph.set_marked(true)
+	moves.push_back(tile)
+	player.add_glyph(tile.get_glyph())
+	tile.set_marked(true)
 
 func _ready() -> void:
 	map.glyphHovered.connect(_onGlyphHovered)
+	player.changed.connect(_onPlayerChanged)
+
+func _onPlayerChanged() -> void:
+	ui.update(player)
 
 func _onGlyphHovered(glyph: GlyphTile) -> void:
 	
@@ -68,10 +82,8 @@ func _input(event: InputEvent) -> void:
 				if event.is_echo():
 					return
 				isReadingWord = true
-				assert(moves.size() == 0)
 				if currentHoveredGlyph != null:
-					moves.push_back(currentHoveredGlyph)
-					currentHoveredGlyph.set_marked(true)
+					_tryReadGlyph(currentHoveredGlyph)
 			elif isReadingWord:
 				_commit_word()
 				currentHoveredGlyph = null

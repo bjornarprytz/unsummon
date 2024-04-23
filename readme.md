@@ -58,32 +58,9 @@ You have, for whatever reason, summoned a demon from hell. When you realize your
 
 ## TODO
 
-- Game Loop
-  - Player moves around the glyphs on the page to form words
-  - Once they hit space, the word is committed to memory, and its  glyphs are removed from the page. New glyphs will appear, like candy crush
-
-- Glyph (letter)
-  - Could have effects applied
-    - shaking, colors, particles, etc.
-  - Elemental number (For alchemical purposes)
-  - Could change orientation
-  - Mono space
-- Grid of Glyphs
-  - Glyphs can change position
-  - Remove glyphs
-- Rules of Harmony
-  - Fibonacci
-  - Cardinal
-  - Primal
-- Player
-  - Spells (at least 3 words)
-  - Words (at least 3 glyphs)
-  - Known Rules of Harmony
-- Controls
-  - Type to move around the page, traversing glyphs
-  - Space: Commit to memory the current word
-  - Enter: Utter the current spell
-  - Backspace: Undo one glyph
+- Restriction on word length: 4 letters
+- UI
+  - Get a good font
 
 - Push release with `./push_release.sh`
 
